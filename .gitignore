@@ -1,6 +1,9 @@
 backend/.env
 backend/media/
+backend/django_app/media/
 backend/.venv/
 frontend/node_modules/
 frontend/dist/
+frontend/.env.local
+.run-logs/
 __pycache__/
