@@ -250,9 +250,19 @@ export default function App() {
   const fetchMeetups = async () => {
     try {
       const response = await djangoFetch(`${apiBase}/meetups/`);
-      const data: any[] = await response.json();
+      const data = await response.json();
+      if (!response.ok) {
+        setMeetups([]);
+        if (response.status === 403) {
+          setMeetupError('Please complete profile creation first.');
+          return;
+        }
+        setMeetupError('Failed to load meetups.');
+        return;
+      }
+      const list = Array.isArray(data) ? data : [];
       setMeetups(
-        data
+        list
           .map((item) => ({
             id: String(item.id),
             title: item.title,
@@ -266,7 +276,7 @@ export default function App() {
       );
       setExpandedMeetupDays((prev) => {
         const next = { ...prev };
-        data.forEach((item) => {
+        list.forEach((item) => {
           const key = item.meetup_date || '';
           if (key && !(key in next)) next[key] = true;
         });
@@ -388,12 +398,17 @@ export default function App() {
   useEffect(() => {
     const init = async () => {
       const auth = await fetchAuthMe();
-      await fetchMeetups();
       if (auth.profile_id) {
+        await fetchMeetups();
         await fetchCurrentProfile(auth.profile_id);
         await fetchMatches(auth.profile_id);
         await fetchMyMeetups(auth.profile_id);
         await fetchThreads(auth.profile_id);
+      } else {
+        setMeetups([]);
+        setMyMeetups([]);
+        setThreads([]);
+        setMatches([]);
       }
     };
     init();
