@@ -81,11 +81,12 @@ services:
       - key: CORS_ORIGINS
         sync: false
 
-staticSites:
-  - name: map4expo-frontend
+  - type: web
+    name: map4expo-frontend
+    runtime: static
     rootDir: frontend
     buildCommand: npm ci && npm run build
-    publishPath: dist
+    staticPublishPath: dist
     pullRequestPreviewsEnabled: false
     envVars:
       - key: VITE_DJANGO_BASE_URL
