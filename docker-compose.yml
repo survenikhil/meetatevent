@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  db:
+    image: pgvector/pgvector:pg15
+    environment:
+      POSTGRES_DB: map4expo
+      POSTGRES_USER: map4expo
+      POSTGRES_PASSWORD: map4expo
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
